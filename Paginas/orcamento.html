@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Orçamento</title>
+  <link rel="stylesheet" href="./Css/Style.css">
+    <link rel="icon" type="image/png" href="../Img/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="../Imagens/favicon.ico" />
+    <link rel="shortcut icon" href="../Imagens/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../Imagens/apple-touch-icon.png" />
+    <link rel="manifest" href="../Imagens/site.webmanifest" />
+</head>
+<body>
+
+<nav>
+  <div class="logo-area">
+    <img src="./Imagens/Logo.png" alt="Logo SorrIA">
+    <h1>SORRIA!</h1>
+  </div>
+  <a href="DashBoard.html">Início</a>
+  <a href="pacientes.html">Pacientes</a>
+  <a href="agendar.html">Agenda</a>
+  <a href="horários.html">Horários</a>
+  <a href="orcamento.html">Orçamento</a>
+  <a href="dentistas.html">Dentistas</a>
+  <a href="estoque.html">Estoque</a>
+  <button class="btn-logout" onclick="logout()">Sair</button>
+</nav>
+
+<div class="container">
+  <h2>Orçamento</h2>
+
+  <input type="text" id="pacienteOrcamento" placeholder="Nome do paciente">
+
+  <h3>Procedimento</h3>
+  <input type="text" id="procedimento" placeholder="Ex: Limpeza">
+  <input type="number" id="valor" placeholder="Valor (R$)">
+  <input type="number" id="quantidade" placeholder="Quantidade">
+
+  <button onclick="adicionarItem()">Adicionar</button>
+
+  <h3>Itens</h3>
+  <ul id="listaItens"></ul>
+
+  <h3>Total: R$ <span id="total">0</span></h3>
+
+  <button onclick="salvarOrcamento()">Salvar Orçamento</button>
+</div>
+
+<script src="./Js/script.Js"></script>
+</body>
+</html>
