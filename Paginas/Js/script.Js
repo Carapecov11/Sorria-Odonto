@@ -414,7 +414,7 @@ function formatarData(data) {
 function logout() {
   localStorage.removeItem("usuarioLogado"); 
 
-  window.location.href = "login.html"; 
+  window.location.href = "Login.html"; 
 }
 document.addEventListener("DOMContentLoaded", () => {
   carregarDashboard();
