@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="./Css/Style.css">
+    <link rel="icon" type="image/png" href="./Img/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="./Imagens/favicon.ico" />
+    <link rel="shortcut icon" href="./Imagens/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./Imagens/apple-touch-icon.png" />
+    <link rel="manifest" href="./Imagens/site.webmanifest" />
+</head>
+<body>
+
+<nav>
+  <div class="logo-area">
+    <img src="./Imagens/Logo.png" alt="Logo SorrIA">
+    <h1>SORRIA!</h1>
+  </div>
+  <a href="DashBoard.html">Início</a>
+  <a href="pacientes.html">Pacientes</a>
+  <a href="agendar.html">Agenda</a>
+  <a href="horários.html">Horários</a>
+  <a href="orcamento.html">Orçamento</a>
+  <a href="dentistas.html">Dentistas</a>
+  <a href="estoque.html">Estoque</a>
+  <button class="btn-logout" onclick="logout()">Sair</button>
+</nav>
+
+<div class="container">
+
+  <h2>Dashboard</h2>
+
+  <div class="cards">
+    <div class="card">
+      <h3>👥 Pacientes</h3>
+      <p id="totalPacientes">0</p>
+    </div>
+
+    <div class="card">
+      <h3>📅 Consultas</h3>
+      <p id="totalConsultas">0</p>
+    </div>
+
+    <div class="card">
+      <h3>💰 Faturamento</h3>
+      <p id="faturamento">R$ 0.00</p>
+    </div>
+  </div>
+
+  <h3>📅 Consultas de Hoje</h3>
+  <ul id="consultasHoje"></ul>
+
+  <h3>⏰ Próximas Consultas</h3>
+  <ul id="proximasConsultas"></ul>
+
+</div>
+
+<script src="./Js/script.Js" defer></script>
+</body>
+</html>
