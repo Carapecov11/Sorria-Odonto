@@ -81,23 +81,51 @@ function listarPacientes() {
   });
 }
 function carregarPacientesSelect() {
-  let select = document.getElementById("pacienteConsulta");
-  if (!select) return;
 
   let pacientes = getData("pacientes");
 
-  select.innerHTML = pacientes.length
-    ? `<option value="">Selecione um paciente</option>`
-    : `<option value="">Nenhum paciente cadastrado</option>`;
+  let selectConsulta =
+    document.getElementById("pacienteConsulta");
 
-  pacientes.forEach(p => {
-    let opt = document.createElement("option");
+  let selectOrcamento =
+    document.getElementById("pacienteOrcamento");
 
-    opt.value = p.nome;
-    opt.textContent = p.nome;
+  // CONSULTA
+  if (selectConsulta) {
 
-    select.appendChild(opt);
-  });
+    selectConsulta.innerHTML =
+      `<option value="">Selecione um paciente</option>`;
+
+    pacientes.forEach(p => {
+
+      let option = document.createElement("option");
+
+      option.value = p.cpf;
+      option.textContent = p.nome;
+
+      selectConsulta.appendChild(option);
+
+    });
+  }
+
+  // ORÇAMENTO
+  if (selectOrcamento) {
+
+    selectOrcamento.innerHTML =
+      `<option value="">Selecione um paciente</option>`;
+
+    pacientes.forEach(p => {
+
+      let option = document.createElement("option");
+
+      option.value = p.cpf;
+      option.textContent =
+        `${p.nome} - ${p.telefone}`;
+
+      selectOrcamento.appendChild(option);
+
+    });
+  }
 }
 function limparPacientes() {
   if (confirm("Tem certeza que deseja apagar todos os pacientes?")) {
@@ -313,6 +341,203 @@ function agendar() {
   limparAgenda();
   listarConsultas();
 }
+function salvarOrcamento() {
+
+  let paciente =
+    document.getElementById("pacienteOrcamento")?.value;
+
+  let itens = getData("itensOrcamentoTemp");
+
+  let total =
+    Number(document.getElementById("total")?.textContent);
+
+  if (!paciente) {
+    return alert("Selecione um paciente!");
+  }
+
+  if (!itens || itens.length === 0) {
+    return alert("Adicione itens ao orçamento!");
+  }
+
+  let orcamentos = getData("orcamentos");
+
+  orcamentos.push({
+    paciente,
+    itens,
+    total,
+    data: new Date().toLocaleDateString("pt-BR")
+  });
+
+  setData("orcamentos", orcamentos);
+
+  localStorage.removeItem("itensOrcamentoTemp");
+
+  document.getElementById("listaItens").innerHTML = "";
+  document.getElementById("total").textContent = "0";
+  document.getElementById("pacienteOrcamento").value = "";
+
+  alert("Orçamento salvo!");
+}
+function adicionarItem() {
+
+  let procedimento =
+    document.getElementById("procedimento")?.value;
+
+  let valor = parseFloat(
+    document.getElementById("valor")?.value
+  );
+
+  let quantidade = parseInt(
+    document.getElementById("quantidade")?.value
+  );
+
+  if (!procedimento || isNaN(valor) || isNaN(quantidade)) {
+    return alert("Preencha tudo!");
+  }
+
+  let itens =
+    getData("itensOrcamentoTemp");
+
+  itens.push({
+    procedimento,
+    valor,
+    quantidade
+  });
+
+  setData("itensOrcamentoTemp", itens);
+
+  atualizarListaOrcamento();
+
+  document.getElementById("procedimento").value = "";
+  document.getElementById("valor").value = "";
+  document.getElementById("quantidade").value = "";
+}
+function atualizarListaOrcamento() {
+
+  let lista =
+    document.getElementById("listaItens");
+
+  let totalEl =
+    document.getElementById("total");
+
+  let itens =
+    getData("itensOrcamentoTemp");
+
+  lista.innerHTML = "";
+
+  let total = 0;
+
+  itens.forEach((item, i) => {
+
+    let subtotal =
+      item.valor * item.quantidade;
+
+    total += subtotal;
+
+    let li = document.createElement("li");
+
+    li.innerHTML = `
+      <div class="item-consulta">
+
+        <div>
+          <strong>${item.procedimento}</strong><br>
+          📦 ${item.quantidade}x<br>
+          💰 R$ ${subtotal.toFixed(2)}
+        </div>
+
+        <div class="acoes-orcamento">
+
+          <button class="btn-whatsapp"
+            onclick="enviarOrcamentoWhats(${i})">
+            WhatsApp
+          </button>
+
+          <button class="btn-delete"
+            onclick="removerItemOrcamento(${i})">
+            🗑️
+          </button>
+
+        </div>
+
+      </div>
+    `;
+
+    lista.appendChild(li);
+
+  });
+
+  totalEl.textContent = total.toFixed(2);
+}
+
+function removerItemOrcamento(i) {
+
+  let itens =
+    getData("itensOrcamentoTemp");
+
+  itens.splice(i, 1);
+
+  setData("itensOrcamentoTemp", itens);
+
+  atualizarListaOrcamento();
+}
+
+function enviarOrcamentoWhats(i) {
+
+  let itens =
+    getData("itensOrcamentoTemp");
+
+  let item = itens[i];
+
+  let cpfPaciente =
+    document.getElementById("pacienteOrcamento")?.value;
+
+  if (!cpfPaciente) {
+    return alert("Selecione o paciente!");
+  }
+
+  let pacientes =
+    getData("pacientes");
+
+  let dadosPaciente = pacientes.find(
+    p => p.cpf === cpfPaciente
+  );
+
+  if (!dadosPaciente) {
+    return alert("Paciente não encontrado!");
+  }
+
+  if (!dadosPaciente.telefone) {
+    return alert("Paciente sem telefone!");
+  }
+
+  let numero =
+    "55" + dadosPaciente.telefone.replace(/\D/g,'');
+
+  let subtotal =
+    item.valor * item.quantidade;
+
+  let msg = encodeURIComponent(
+`Olá ${dadosPaciente.nome}!
+
+Segue seu orçamento odontológico 🦷
+
+Procedimento:
+${item.procedimento}
+
+Quantidade:
+${item.quantidade}x
+
+Valor:
+R$ ${subtotal.toFixed(2)}
+
+Clínica SorrIA`
+  );
+
+  window.open(
+    `https://wa.me/${numero}?text=${msg}`,
+    "_blank"
+  );
+}
 function listarConsultas() {
   let lista = document.getElementById("listaConsultas");
   if (!lista) return;
@@ -478,4 +703,6 @@ document.addEventListener("DOMContentLoaded", () => {
   carregarDentistasSelect();
   carregarEstoqueSelect();
   carregarCalendario();
+  listarOrcamentos();
+  
 });
