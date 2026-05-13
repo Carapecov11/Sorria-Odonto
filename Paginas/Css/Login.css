@@ -1,201 +1,162 @@
-/* ================= RESET ================= */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Inter", sans-serif;
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter', sans-serif;
 }
 
-/* ================= BODY ================= */
-body {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+body{
 
-  background-image: url('../Imagens/Fundo.Login.png');
-  background-size: 100% 100%;
-  background-position: center;
-  color: white;
+    height:100vh;
 
-  font-family: 'Inter', sans-serif;
-}
-
-.login-wrapper {
-  width: 100%;
-  max-width: 1100px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 40px;
-}
-
-
-@media (max-width: 900px){
-
-  body{
-    padding:20px;
-    background-size: cover; 
-    background-repeat:no-repeat;
-  }
-
-  .login-wrapper{
-    flex-direction: column;
+    display:flex;
     justify-content:center;
-    text-align:center;
-    gap:30px;
-  }
+    align-items:center;
 
-  .login-left{
-    width:100%;
-  }
+    background-image:url('../Imagens/Fundo.Login.png');
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
 
-  .login-left h1{
-    font-size:32px;
-  }
-
-  .login-left img{
-    max-width:280px;
-    margin-top:20px;
-  }
-
-  .login-card{
-    width:100%;
-    max-width:400px;
-  }
-
+    overflow:hidden;
 }
 
-@media (max-width: 480px){
+.login-container{
 
-  body{
-    padding:15px;
-  }
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 
-  .login-left h1{
-    font-size:26px;
-    line-height:1.3;
-  }
+    padding-top:160px;
+}
 
-  .login-left img{
-    max-width:220px;
-  }
+.login-card{
 
-  .login-card{
-    padding:22px;
-    border-radius:16px;
-  }
+    width:430px;
 
-  .login-card input{
+    padding:40px;
+
+    border-radius:35px;
+
+    background:rgba(12, 10, 28, 0.78);
+
+    backdrop-filter:blur(10px);
+
+    box-shadow:
+    0 0 60px rgba(0,0,0,0.45);
+
+    animation:fadeUp 1s ease;
+}
+
+@keyframes fadeUp{
+
+    from{
+        opacity:0;
+        transform:translateY(30px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.login-card label{
+
+    display:block;
+
+    margin-bottom:12px;
+    margin-top:18px;
+
+    font-size:18px;
+    font-weight:700;
+
+    color:white;
+
+    letter-spacing:1px;
+}
+
+.login-card input{
+
+    width:100%;
+    height:55px;
+
+    border:none;
+    outline:none;
+
+    border-radius:30px;
+
+    background:#2a2442;
+
+    padding:0 20px;
+
+    color:white;
+
     font-size:16px;
-    padding:14px;
-  }
 
-  .login-card button{
-    min-height:48px;
-  }
-
+    transition:.3s;
 }
 
-.login-left {
-  flex: 1;
+.login-card input:focus{
+
+    transform:scale(1.02);
+
+    box-shadow:
+    0 0 0 2px #19e8ff,
+    0 0 20px rgba(25,232,255,.3);
 }
 
-.login-left h1 {
-  font-size: 40px;
-  font-weight: bold;
-  line-height: 1.2;
+.login-card button{
 
-  background: linear-gradient(135deg, #67e8f9, #22d3ee);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+    width:100%;
+    height:58px;
+
+    margin-top:40px;
+
+    border:none;
+
+    border-radius:30px;
+
+    background:#16dfff;
+
+    color:white;
+
+    font-size:22px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.3s;
 }
 
-.login-left img {
-  width: 100%;
-  max-width: 400px;
-  margin-top: 30px;
+.login-card button:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+    0 0 25px rgba(22,223,255,.45);
 }
 
-/* ================= CARD LOGIN ================= */
-.login-card {
-  width: 350px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(15px);
+.login-card button:active{
 
-  padding: 30px;
-  border-radius: 20px;
-
-  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    transform:scale(.98);
 }
 
-/* ================= TITULO ================= */
-.login-card h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  letter-spacing: 2px;
+@media(max-width:600px){
 
-  color: #22d3ee;
-}
+    body{
+        padding:20px;
+    }
 
-/* ================= LABEL ================= */
-.login-card label {
-  font-size: 13px;
-  color: #cbd5f5;
-}
+    .login-card{
 
-/* ================= INPUT ================= */
-.login-card input {
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0 15px;
+        width:100%;
 
-  border-radius: 10px;
-  border: none;
+        padding:30px;
 
-  background: rgba(255,255,255,0.1);
-  color: white;
-}
+        border-radius:25px;
+    }
 
-.login-card input::placeholder {
-  color: #94a3b8;
-}
-
-/* foco */
-.login-card input:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px #22d3ee;
-}
-
-/* ================= LINK ================= */
-.login-card .link {
-  font-size: 12px;
-  text-align: right;
-  margin-bottom: 15px;
-  color: #94a3b8;
-  cursor: pointer;
-}
-
-/* ================= BOTÃO ================= */
-.login-card button {
-  width: 100%;
-  padding: 12px;
-
-  border-radius: 10px;
-  border: none;
-
-  background: linear-gradient(135deg, #22d3ee, #06b6d4);
-  color: #f1f1f1;
-
-  font-weight: bold;
-  letter-spacing: 2px;
-
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-/* hover bonito */
-.login-card button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(34,211,238,0.5);
 }
