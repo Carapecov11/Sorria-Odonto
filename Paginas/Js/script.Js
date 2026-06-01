@@ -310,48 +310,87 @@ function baixarEstoque(procedimento) {
   return true;
 }
 function agendar() {
-  let paciente = document.getElementById("pacienteConsulta")?.value;
-  let dentista = document.getElementById("dentistaConsulta")?.value;
-  let procedimento = document.getElementById("procedimentoConsulta")?.value;
-  let data = document.getElementById("dataConsulta")?.value;
-  let hora = document.getElementById("horaConsulta")?.value;
-  let valor = parseFloat(document.getElementById("valorConsulta")?.value);
-  let pagamento = document.getElementById("pagamentoConsulta")?.value;
 
-  if (!paciente || !dentista || !procedimento || !data || !hora || isNaN(valor) || !pagamento) {
+  let cpfPaciente =
+    document.getElementById("pacienteConsulta")?.value;
+
+  let dentista =
+    document.getElementById("dentistaConsulta")?.value;
+
+  let procedimento =
+    document.getElementById("procedimentoConsulta")?.value;
+
+  let data =
+    document.getElementById("dataConsulta")?.value;
+
+  let hora =
+    document.getElementById("horaConsulta")?.value;
+
+  let valor =
+    parseFloat(document.getElementById("valorConsulta")?.value);
+
+  let pagamento =
+    document.getElementById("pagamentoConsulta")?.value;
+
+  if (
+    !cpfPaciente ||
+    !dentista ||
+    !procedimento ||
+    !data ||
+    !hora ||
+    isNaN(valor) ||
+    !pagamento
+  ) {
     return alert("Preencha tudo!");
-}
+  }
+
+  let pacientes = getData("pacientes");
+
+  let dadosPaciente = pacientes.find(
+    p => p.cpf === cpfPaciente
+  );
+
+  if (!dadosPaciente) {
+    return alert("Paciente não encontrado!");
+  }
 
   if (!baixarEstoque(procedimento)) return;
 
   let consultas = getData("consultas");
 
   consultas.push({
-  paciente,
-  dentista,
-  procedimento,
-  data,
-  hora,
-  valor,
-  pagamento 
-});
+    cpf: dadosPaciente.cpf,
+    paciente: dadosPaciente.nome,
+    telefone: dadosPaciente.telefone,
+    dentista,
+    procedimento,
+    data,
+    hora,
+    valor,
+    pagamento
+  });
 
   setData("consultas", consultas);
 
   limparAgenda();
   listarConsultas();
+  carregarCalendario();
+  carregarDashboard();
+
+  alert("Consulta agendada com sucesso!");
 }
 function salvarOrcamento() {
 
-  let paciente =
+  let cpfPaciente =
     document.getElementById("pacienteOrcamento")?.value;
 
-  let itens = getData("itensOrcamentoTemp");
+  let itens =
+    getData("itensOrcamentoTemp");
 
   let total =
     Number(document.getElementById("total")?.textContent);
 
-  if (!paciente) {
+  if (!cpfPaciente) {
     return alert("Selecione um paciente!");
   }
 
@@ -359,10 +398,22 @@ function salvarOrcamento() {
     return alert("Adicione itens ao orçamento!");
   }
 
+  let pacientes = getData("pacientes");
+
+  let dadosPaciente = pacientes.find(
+    p => p.cpf === cpfPaciente
+  );
+
+  if (!dadosPaciente) {
+    return alert("Paciente não encontrado!");
+  }
+
   let orcamentos = getData("orcamentos");
 
   orcamentos.push({
-    paciente,
+    cpf: dadosPaciente.cpf,
+    paciente: dadosPaciente.nome,
+    telefone: dadosPaciente.telefone,
     itens,
     total,
     data: new Date().toLocaleDateString("pt-BR")
@@ -376,7 +427,7 @@ function salvarOrcamento() {
   document.getElementById("total").textContent = "0";
   document.getElementById("pacienteOrcamento").value = "";
 
-  alert("Orçamento salvo!");
+  alert("Orçamento salvo com sucesso!");
 }
 function adicionarItem() {
 
@@ -391,17 +442,46 @@ function adicionarItem() {
     document.getElementById("quantidade")?.value
   );
 
+  let dentes = [
+    ...document.getElementById("dente").selectedOptions
+  ]
+    .map(op => op.value)
+    .filter(v => v !== "");
+
+  let faces = [
+    ...document.querySelectorAll(
+      'input[name="face"]:checked'
+    )
+  ].map(f => f.value);
+
+  let regioes = dentes.map(
+    d => obterRegiaoDente(d)
+  );
+
   if (!procedimento || isNaN(valor) || isNaN(quantidade)) {
     return alert("Preencha tudo!");
   }
 
-  let itens =
-    getData("itensOrcamentoTemp");
+  if (dentes.length === 0) {
+    return alert("Selecione pelo menos um dente!");
+  }
+
+  let itens = getData("itensOrcamentoTemp");
+  
+  let pacienteSelect =
+  document.getElementById("pacienteOrcamento");
+
+  let pacienteNome =
+  pacienteSelect.options[pacienteSelect.selectedIndex].text;
 
   itens.push({
+    pacienteNome,
     procedimento,
     valor,
-    quantidade
+    quantidade,
+    dentes,
+    regioes,
+    faces
   });
 
   setData("itensOrcamentoTemp", itens);
@@ -411,6 +491,14 @@ function adicionarItem() {
   document.getElementById("procedimento").value = "";
   document.getElementById("valor").value = "";
   document.getElementById("quantidade").value = "";
+
+  document
+    .querySelectorAll("#dente option")
+    .forEach(op => op.selected = false);
+
+  document
+    .querySelectorAll('input[name="face"]')
+    .forEach(face => face.checked = false);
 }
 function atualizarListaOrcamento() {
 
@@ -440,9 +528,24 @@ function atualizarListaOrcamento() {
       <div class="item-consulta">
 
         <div>
+
           <strong>${item.procedimento}</strong><br>
-          📦 ${item.quantidade}x<br>
+          👤 Paciente: ${item.pacienteNome}<br>
+
+          🦷 Dentes:
+          ${item.dentes?.join(", ") || "Não informado"}<br>
+
+          📍 Regiões:
+          ${item.regioes?.join(", ") || "Não informada"}<br>
+
+          🔹 Faces:
+          ${item.faces?.join(", ") || "Não informadas"}<br>
+
+          📦 Quantidade:
+          ${item.quantidade}x<br>
+
           💰 R$ ${subtotal.toFixed(2)}
+
         </div>
 
         <div class="acoes-orcamento">
@@ -467,6 +570,9 @@ function atualizarListaOrcamento() {
   });
 
   totalEl.textContent = total.toFixed(2);
+  document
+  .querySelectorAll("#dente option")
+  .forEach(op => op.selected = false);
 }
 
 function removerItemOrcamento(i) {
@@ -582,7 +688,7 @@ function enviarLembrete(indiceConsulta) {
   let consulta = consultas[indiceConsulta];
 
   let paciente = pacientes.find(
-    p => p.nome === consulta.paciente
+    p => p.cpf === consulta.cpf
   );
 
   if (!paciente || !paciente.telefone) {
@@ -678,6 +784,24 @@ function carregarCalendario() {
     calendario.appendChild(divDia);
   }
 }
+function obterRegiaoDente(dente){
+
+  dente = Number(dente);
+
+  if (dente >= 11 && dente <= 18)
+    return "Superior Direito";
+
+  if (dente >= 21 && dente <= 28)
+    return "Superior Esquerdo";
+
+  if (dente >= 31 && dente <= 38)
+    return "Inferior Esquerdo";
+
+  if (dente >= 41 && dente <= 48)
+    return "Inferior Direito";
+
+  return "Não informada";
+}
 function formatarData(data) {
   let d = new Date(data);
   return d.toLocaleDateString("pt-BR", {
@@ -704,5 +828,5 @@ document.addEventListener("DOMContentLoaded", () => {
   carregarEstoqueSelect();
   carregarCalendario();
   listarOrcamentos();
-  
+
 });
