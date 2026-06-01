@@ -28,26 +28,168 @@
 </nav>
 
 <div class="container">
-  <h2>Orçamento</h2>
+
+  <h2>Orçamento Odontológico</h2>
 
   <select id="pacienteOrcamento">
     <option value="">Selecione um paciente</option>
   </select>
 
+<div class="odontograma-box">
+
+  <div class="dente-box">
+
+    <label for="dente">
+      Selecionar Dente/Região
+    </label>
+
+    <small>
+      Segure Ctrl (Windows) ou Cmd (Mac) para selecionar vários dentes
+    </small>
+
+    <select id="dente" multiple size="8">
+
+      <optgroup label="Superior Direito">
+        <option value="18">18</option>
+        <option value="17">17</option>
+        <option value="16">16</option>
+        <option value="15">15</option>
+        <option value="14">14</option>
+        <option value="13">13</option>
+        <option value="12">12</option>
+        <option value="11">11</option>
+      </optgroup>
+
+      <optgroup label="Superior Esquerdo">
+        <option value="21">21</option>
+        <option value="22">22</option>
+        <option value="23">23</option>
+        <option value="24">24</option>
+        <option value="25">25</option>
+        <option value="26">26</option>
+        <option value="27">27</option>
+        <option value="28">28</option>
+      </optgroup>
+
+      <optgroup label="Inferior Esquerdo">
+        <option value="31">31</option>
+        <option value="32">32</option>
+        <option value="33">33</option>
+        <option value="34">34</option>
+        <option value="35">35</option>
+        <option value="36">36</option>
+        <option value="37">37</option>
+        <option value="38">38</option>
+      </optgroup>
+
+      <optgroup label="Inferior Direito">
+        <option value="41">41</option>
+        <option value="42">42</option>
+        <option value="43">43</option>
+        <option value="44">44</option>
+        <option value="45">45</option>
+        <option value="46">46</option>
+        <option value="47">47</option>
+        <option value="48">48</option>
+      </optgroup>
+
+    </select>
+
+  </div>
+
+  <div class="faces-box">
+
+    <label id="tituloFace">
+      Face do Dente
+    </label>
+
+    <div class="faces">
+
+      <label>
+        <input type="checkbox" name="face" value="M">
+        M
+      </label>
+
+      <label>
+        <input type="checkbox" name="face" value="D">
+        D
+      </label>
+
+      <label>
+        <input type="checkbox" name="face" value="V">
+        V
+      </label>
+
+      <label>
+        <input type="checkbox" name="face" value="O/I">
+        O/I
+      </label>
+
+      <label>
+        <input type="checkbox" name="face" value="L/P">
+        L/P
+      </label>
+
+    </div>
+
+  </div>
+
+</div>
+
   <h3>Procedimento</h3>
-  <input type="text" id="procedimento" placeholder="Ex: Limpeza">
-  <input type="number" id="valor" placeholder="Valor (R$)">
-  <input type="number" id="quantidade" placeholder="Quantidade">
 
-  <button onclick="adicionarItem()">Adicionar</button>
+  <input
+    type="text"
+    id="procedimento"
+    placeholder="Ex: Limpeza, Canal, Restauração">
 
-  <h3>Itens</h3>
+  <input
+    type="number"
+    id="valor"
+    step="0.01"
+    min="0"
+    placeholder="Valor (R$)">
+
+  <input
+    type="number"
+    id="quantidade"
+    min="1"
+    value="1"
+    placeholder="Quantidade">
+
+  <button onclick="adicionarItem()">
+    Adicionar Item
+  </button>
+
+  <h3>Itens do Orçamento</h3>
+
   <ul id="listaItens"></ul>
 
-  <h3>Total: R$ <span id="total">0</span></h3>
+  <h3>Total: R$ <span id="total">0,00</span></h3>
 
-  <button onclick="salvarOrcamento()">Salvar Orçamento</button>
+  <button onclick="salvarOrcamento()">
+    Salvar Orçamento
+  </button>
+
 </div>
+
+<script>
+document.getElementById("dente").addEventListener("change", function() {
+
+  const titulo = document.getElementById("tituloFace");
+
+  let dentes = [...this.selectedOptions]
+    .map(op => op.value);
+
+  if (dentes.length > 0) {
+    titulo.textContent =
+      "Face - Dentes: " + dentes.join(", ");
+  } else {
+    titulo.textContent = "Face do Dente";
+  }
+
+});
+</script>
 
 <script src="./Js/script.Js"></script>
 </body>
